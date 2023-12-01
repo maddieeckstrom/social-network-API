@@ -1,3 +1,5 @@
+const {Schema, Model} = require('mongoose');
+
 const thoughtSchema = new Schema(
     {
         thoughtText: {
@@ -20,5 +22,7 @@ const thoughtSchema = new Schema(
         }
     }
 )
+
+module.exports = thoughtSchema;
 
 // schema settings - create a virtual called reactionCount that retrieves the length of the thought's reactions array
