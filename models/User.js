@@ -1,27 +1,35 @@
 const {Schema, Model} = require('mongoose');
+const Thought = require('./Thought');
 
 const userSchema = new Schema(
     {
         username: {
             type: String,
-            // is unique = true
+            unique: true,
             required: true,
-            // is trimmed = true
+            trim: true,
         },
         email: {
             type: String,
             required: true,
-            //is unique
+            unique: true,
             // must match valid email address, look into mongooses matching validation
         },
-        thoughts: {
-            //array of _id values that reference the thought model here
-        },
-        friends: {
-            //array of _if values referencing the user model
-        }
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Thought",
+            }
+        ],
+        friends:  [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            }
+        ],
     }
 )
 
-module.exports = userSchema;
-//Schema settings - create a virtual called friendCount tha tretrieves the length of the user's friends array field on query
+const User = new Model(userSchema);
+module.exports = User;
+//Schema settings - create a virtual called friendCount that retrieves the length of the user's friends array field on query

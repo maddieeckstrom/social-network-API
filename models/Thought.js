@@ -1,4 +1,6 @@
 const {Schema, Model} = require('mongoose');
+const dayjs = require('dayjs');
+const Reaction = require('./Reaction');
 
 const thoughtSchema = new Schema(
     {
@@ -11,18 +13,22 @@ const thoughtSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            //how to use the getter method to format the timestamp on query
+            get: function(dateTime) {
+                return dayjs(dateTime).format('MMM D, YYYY')
+            }
         },
         username: {
             type: String,
             required: true
         },
-        reactions: {
-            //array of nested documents created with the reactionSchema
-        }
+        reactions: [
+            Reaction
+        ]
     }
 )
 
-module.exports = thoughtSchema;
+
+const Thought = new Model(thoughtSchema);
+module.exports = Thought;
 
 // schema settings - create a virtual called reactionCount that retrieves the length of the thought's reactions array

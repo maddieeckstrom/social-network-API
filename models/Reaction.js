@@ -1,12 +1,12 @@
 //schema only?
-const {Schema, Types} = require('mongoose');
+const {Schema} = require('mongoose');
 
 
 const reactionSchema = new Schema(
     {
         reactionId: {
             type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId(),
+            default: () => new Schema.Types.ObjectId(),
         },
         reactionBody: {
             type: String,
@@ -20,7 +20,9 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            // how to add the getter method to format the timestamp on query?
+            get: function(dateTime) {
+                return dayjs(dateTime).format('MMM D, YYYY')
+            }        
         }
     }
 )
