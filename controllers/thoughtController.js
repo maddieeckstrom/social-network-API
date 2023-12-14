@@ -12,9 +12,12 @@ module.exports = {
     async getThoughtById(req, res) {
         try {
             const thought = await Thought.findOne({ _id: req.params.thoughtId }).select(''); // WHAT TO PUT HERE
+
             if (!thought) {
                 return res.status(404).json({ message: 'No thought could be found with that Id'});
             }
+
+            res.json(thought);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -38,6 +41,8 @@ module.exports = {
             if (!thought) {
                 res.status(404).json({ message: 'No thought with that id' });
             }
+
+            res.json(thought);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -49,6 +54,8 @@ module.exports = {
             if (!thought) {
                 res.status(404).json({ message: 'No thought with that id' });
             }
+
+            res.json({ message: 'Thought deleted' });
         } catch (err) {
             res.status(500).json(err);
         }
