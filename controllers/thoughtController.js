@@ -1,4 +1,4 @@
-const { Thought } = require('../models');
+const { Thought } = require('../models/Thought');
 
 module.exports = {
     async getThoughts(req, res) {
@@ -56,6 +56,28 @@ module.exports = {
             }
 
             res.json({ message: 'Thought deleted' });
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    //I don't think the two below are correct
+    async postReaction(req, res) {
+        try {
+            const reaction = await Reaction.create(req.body);
+            res.json(reaction);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    async deleteReaction(req, res) {
+        try {
+            const reaction = await Reaction.findOneAndDelete({ _id: req.params.thoughtId });
+
+            if (!reaction) {
+                res.status(404).json({ message: 'No reaction with that id' });
+            }
+
+            res.json({ message: 'Reaction deleted' });
         } catch (err) {
             res.status(500).json(err);
         }

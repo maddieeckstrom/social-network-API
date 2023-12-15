@@ -1,4 +1,4 @@
-const {Schema, Model} = require('mongoose');
+const {Schema, model} = require('mongoose');
 const dayjs = require('dayjs');
 const Reaction = require('./Reaction');
 
@@ -27,8 +27,8 @@ const thoughtSchema = new Schema(
     }
 )
 
-
-const Thought = new Model(thoughtSchema);
+// new model?
+const Thought = model("Thought", thoughtSchema);
 module.exports = Thought;
 
 // schema settings - create a virtual called reactionCount that retrieves the length of the thought's reactions array

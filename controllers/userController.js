@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../models/User');
 
 module.exports = {
     async getUsers(req, res) {
@@ -56,6 +56,28 @@ module.exports = {
             }
 
             res.json({ message: 'User deleted' });
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    //I don't think the two below are correct
+    async postFriend(req, res) {
+        try {
+            const user = await User.create(req.body.friends); //How do I target friends whose reference is User?
+            res.json(user);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    async deleteFriend(req, res) {
+        try {
+            const user = await User.findOneAndDelete({ _id: req.body.friends });
+
+            if (!user) {
+                res.status(404).json({ message: 'No friend with that id' });
+            }
+
+            res.json({ message: 'Friend deleted' });
         } catch (err) {
             res.status(500).json(err);
         }
