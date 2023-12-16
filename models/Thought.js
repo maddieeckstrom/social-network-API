@@ -24,11 +24,19 @@ const thoughtSchema = new Schema(
         reactions: [
             Reaction
         ]
+    },
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false,
     }
-)
+);
+
+postSchema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
+});
 
 // new model?
 const Thought = model("Thought", thoughtSchema);
 module.exports = Thought;
-
-// schema settings - create a virtual called reactionCount that retrieves the length of the thought's reactions array

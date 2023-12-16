@@ -28,4 +28,3 @@ const reactionSchema = new Schema(
 )
 
 module.exports = reactionSchema;
-//schema settings - this will not be a model ,but rather will be used as the reaction field's subdocumnet schema in the Thought model

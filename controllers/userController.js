@@ -3,7 +3,8 @@ const { User } = require('../models/User');
 module.exports = {
     async getUsers(req, res) {
         try {
-            const users = await User.find();
+            const users = await User.find()
+                .populate('friendsIds')
             res.json(users);
         } catch (err) {
             res.status(500).json(err);
@@ -61,19 +62,20 @@ module.exports = {
         }
     },
     //I don't think the two below are correct
+    // do I need to set new to true and do I need to add to set for the post?
     async postFriend(req, res) {
         try {
-            const user = await User.create(req.body.friends); //How do I target friends whose reference is User?
-            res.json(user);
+            const newFriend = await User.create(req.params.id); //How do I target friends whose reference is User?
+            res.json(newFriend);
         } catch (err) {
             res.status(500).json(err);
         }
     },
     async deleteFriend(req, res) {
         try {
-            const user = await User.findOneAndDelete({ _id: req.body.friends });
+            const deletedFriend = await User.findOneAndDelete({ _id: req.params.id });
 
-            if (!user) {
+            if (!deletedFriend) {
                 res.status(404).json({ message: 'No friend with that id' });
             }
 
