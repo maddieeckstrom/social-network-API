@@ -1,10 +1,12 @@
-const { User } = require('../models/User');
+const User = require('../models/User');
 
 module.exports = {
     async getUsers(req, res) {
         try {
             const users = await User.find()
-                .populate('friendsIds')
+                .populate('friends')
+                .populate('thoughts')
+
             res.json(users);
         } catch (err) {
             res.status(500).json(err);
@@ -12,7 +14,8 @@ module.exports = {
     },
     async getUserById(req, res) {
         try {
-            const user = await User.findOne({ _id: req.params.userId }).select(''); //  WHAT DO I PUT HERE
+            const user = await User.findOne({ _id: req.params.userId })
+            .populate('thoughts')
 
             if (!user) {
                 return res.status(404).json({ message: 'No user by that Id' });
@@ -61,20 +64,31 @@ module.exports = {
             res.status(500).json(err);
         }
     },
-    //I don't think the two below are correct
-    // do I need to set new to true and do I need to add to set for the post?
+    
     async postFriend(req, res) {
         try {
-            const newFriend = await User.create(req.params.id); //How do I target friends whose reference is User?
-            res.json(newFriend);
+            const user = await User.findOneAndUpdate({ _id: req.params.userId },
+            {
+                $addToSet: {friends: req.params.friendId}
+            },
+            {
+                new: true
+            })
+            res.json(user);
         } catch (err) {
             res.status(500).json(err);
         }
     },
     async deleteFriend(req, res) {
         try {
-            const deletedFriend = await User.findOneAndDelete({ _id: req.params.id });
-
+            const deletedFriend = await User.findOneAndUpdate({ _id: req.params.userId },
+                {
+                    $pull: {friends: req.params.friendId}
+                },
+                {
+                    new: true
+                })
+                res.json(user);
             if (!deletedFriend) {
                 res.status(404).json({ message: 'No friend with that id' });
             }

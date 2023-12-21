@@ -1,9 +1,11 @@
-const { Thought } = require('../models/Thought');
+const Thought = require('../models/Thought');
 
 module.exports = {
     async getThoughts(req, res) {
         try {
-            const thoughts = await Thought.find();
+            const thoughts = await Thought.find()
+                .populate('reactions')
+
             res.json(thoughts);
         } catch (err) {
             res.status(500).json(err);
@@ -11,7 +13,8 @@ module.exports = {
     },
     async getThoughtById(req, res) {
         try {
-            const thought = await Thought.findOne({ _id: req.params.thoughtId }).select(''); // WHAT TO PUT HERE
+            const thought = await Thought.findOne({ _id: req.params.thoughtId })
+            .populate('reactions')
 
             if (!thought) {
                 return res.status(404).json({ message: 'No thought could be found with that Id'});
@@ -60,11 +63,18 @@ module.exports = {
             res.status(500).json(err);
         }
     },
-    //I don't think the two below are correct
+
     async postReaction(req, res) {
         try {
-            const reaction = await Reaction.create(req.body);
-            res.json(reaction);
+            const thought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId },
+                {
+                    $addToSet: {reactions: req.params.reactions}
+                },
+                {
+                    new: true
+                })
+                console.log(thought);
+            res.json(thought);
         } catch (err) {
             res.status(500).json(err);
         }
