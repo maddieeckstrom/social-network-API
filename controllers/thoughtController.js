@@ -66,9 +66,10 @@ module.exports = {
 
     async postReaction(req, res) {
         try {
+            console.log(req.body);
             const thought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId },
                 {
-                    $addToSet: {reactions: req.params.reactions}
+                    $addToSet: {reactions: req.body}
                 },
                 {
                     new: true
@@ -81,7 +82,7 @@ module.exports = {
     },
     async deleteReaction(req, res) {
         try {
-            const reaction = await Reaction.findOneAndDelete({ _id: req.params.thoughtId });
+            const reaction = await Reaction.findOneAndDelete({ _id: req.params.reactionId });
 
             if (!reaction) {
                 res.status(404).json({ message: 'No reaction with that id' });
